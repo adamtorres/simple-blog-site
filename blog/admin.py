@@ -8,6 +8,7 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ["title", "author", "created_at"]
     prepopulated_fields = {"slug": ("title",)}
     list_filter = ["created_at"]
+    fields = ["title", "slug", "author", "content", "created_at"]
 
     def get_changeform_initial_data(self, request):
         return {"author": request.user.pk}

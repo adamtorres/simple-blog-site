@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 
 
 class Viewer(models.Model):
@@ -18,7 +19,7 @@ class Post(models.Model):
     slug = models.SlugField(unique=True)
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="blog_posts")
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField()
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -38,6 +39,11 @@ class Post(models.Model):
     def viewer_count(self):
         """Return the number of unique viewers who have read this post."""
         return self.viewlog_set.distinct("viewer__id").count()
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.created_at = timezone.now()
+        super().save(*args, **kwargs)
 
 
 class ViewLog(models.Model):
