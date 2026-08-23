@@ -23,7 +23,7 @@
                 </thead>
                 <tbody>
                     {% for post in page_obj %}
-                    <tr>
+                    <tr{% if post.id in viewer_post_ids %} class="table-secondary"{% endif %}>
                         <td>
                             <a href="{{ post.get_absolute_url }}" class="text-decoration-none fw-medium">
                                 {{ post.title }}
