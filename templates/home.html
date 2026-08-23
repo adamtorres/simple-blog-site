@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Simple Blog - Welcome{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="text-center mb-4">
+            <h1>Welcome to the Blog</h1>
+            <p class="text-muted">Enter your name below to start reading.</p>
+        </div>
+
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form method="post" action="{% url 'blog:viewer_login' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Your Name</label>
+                        <input type="text" class="form-control" id="username" name="username" autofocus required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Start Reading</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

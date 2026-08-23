@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}All Posts - Simple Blog{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <h1 class="mb-4">All Posts</h1>
+
+        {% if page_obj %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        {% if is_staff %}
+                        <th>Viewers</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in page_obj %}
+                    <tr>
+                        <td>
+                            <a href="{{ post.get_absolute_url }}" class="text-decoration-none fw-medium">
+                                {{ post.title }}
+                            </a>
+                        </td>
+                        <td>{{ post.author.get_full_name|default:post.author.username }}</td>
+                        <td class="text-muted">{{ post.created_at|date:"M d, Y" }}</td>
+                        <td>
+                            {% if post.id in viewer_post_ids %}
+                                <span class="badge bg-success">Read</span>
+                            {% else %}
+                                <span class="badge bg-secondary">New</span>
+                            {% endif %}
+                        </td>
+                        {% if is_staff %}
+                        <td>
+                            {% for vl in post.viewlog_set.all %}
+                                <span class="badge bg-info text-dark">{{ vl.viewer.username }}</span>
+                                {% if not forloop.last %} {% endif %}
+                            {% empty %}
+                                <span class="text-muted small">none yet</span>
+                            {% endfor %}
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if page_obj.has_other_pages %}
+        <nav aria-label="Post pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+                <li class="page-item disabled">
+                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </li>
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+        {% else %}
+        <div class="alert alert-info">
+            No posts yet. The author hasn't written anything.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

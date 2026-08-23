@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load mdfilters %}
+
+{% block title %}{{ post.title }} - Simple Blog{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <article>
+            <a href="{% url 'blog:post_list' %}" class="text-muted mb-3 d-inline-block">
+                &larr; Back to all posts
+            </a>
+
+            <h1>{{ post.title }}</h1>
+            <p class="text-muted mb-4">
+                <strong>{{ post.author.get_full_name|default:post.author.username }}</strong>
+                &middot; {{ post.created_at|date:"F j, Y" }}
+            </p>
+
+            <div class="post-content">
+                {{ post.content|render_markdown|safe }}
+            </div>
+        </article>
+
+        {% if is_staff %}
+        <div class="mt-4 p-3 border rounded bg-light">
+            <h6 class="mb-3">Viewers ({{ post.viewlog_set.count }})</h6>
+            {% for vl in post.viewlog_set.all %}
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge bg-secondary">{{ vl.viewer.username }}</span>
+                    <small class="text-muted">{{ vl.viewed_at|date:"M d, Y H:i" }}</small>
+                </div>
+            {% empty %}
+                <p class="text-muted mb-0">No one has read this post yet.</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

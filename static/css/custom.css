@@ -1,0 +1,67 @@
+/* Custom overrides for Simple Blog */
+.post-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.post-content h1,
+.post-content h2,
+.post-content h3 {
+    margin-top: 1.5em;
+    margin-bottom: 0.75em;
+}
+
+.post-content p {
+    margin-bottom: 1em;
+}
+
+.post-content pre {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 1em;
+    overflow-x: auto;
+}
+
+.post-content code {
+    background: #f8f9fa;
+    padding: 0.15em 0.3em;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.post-content pre code {
+    background: none;
+    padding: 0;
+}
+
+.post-content blockquote {
+    border-left: 4px solid #dee2e6;
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    color: #6c757d;
+}
+
+.post-content table {
+    width: 100%;
+    margin: 1em 0;
+    border-collapse: collapse;
+}
+
+.post-content table th,
+.post-content table td {
+    border: 1px solid #dee2e6;
+    padding: 0.5em;
+}
+
+.post-content table th {
+    background: #f8f9fa;
+    font-weight: 600;
+}
+
+.table th {
+    font-weight: 600;
+}
+
+.badge {
+    font-weight: 500;
+}
