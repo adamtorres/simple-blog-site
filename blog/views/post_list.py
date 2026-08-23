@@ -22,7 +22,7 @@ def post_list(request):
     if viewer is None:
         return redirect("blog:home")
 
-    all_posts = Post.objects.all()
+    all_posts = Post.objects.filter(status="approved")
     paginator = Paginator(all_posts, 10)
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)

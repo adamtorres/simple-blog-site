@@ -15,12 +15,18 @@ class Viewer(models.Model):
 
 
 class Post(models.Model):
+    status_choices = (
+        ("pending", "Pending"),
+        ("approved", "Approved"),
+    )
+
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="blog_posts")
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=20, choices=status_choices, default="pending")
 
     class Meta:
         ordering = ["-created_at"]
@@ -39,6 +45,11 @@ class Post(models.Model):
     def viewer_count(self):
         """Return the number of unique viewers who have read this post."""
         return self.viewlog_set.distinct("viewer__id").count()
+
+    @property
+    def is_public(self):
+        """Return True if the post has been approved and is public."""
+        return self.status == "approved"
 
     def save(self, *args, **kwargs):
         if not self.pk:

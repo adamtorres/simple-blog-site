@@ -21,7 +21,7 @@ def post_detail(request, slug):
     if viewer is None:
         return redirect("blog:home")
 
-    post = get_object_or_404(Post, slug=slug)
+    post = get_object_or_404(Post, slug=slug, status="approved")
 
     # Determine next/previous posts in chronological order
     all_posts = list(Post.objects.values_list("slug", flat=True).order_by("created_at"))
