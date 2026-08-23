@@ -23,11 +23,19 @@ def post_detail(request, slug):
 
     post = get_object_or_404(Post, slug=slug)
 
+    # Determine next/previous posts in chronological order
+    all_posts = list(Post.objects.values_list("slug", flat=True).order_by("created_at"))
+    current_idx = all_posts.index(slug)
+    next_post_slug = all_posts[current_idx + 1] if current_idx + 1 < len(all_posts) else None
+    prev_post_slug = all_posts[current_idx - 1] if current_idx - 1 >= 0 else None
+
     # Record the view (skip if already recorded)
     viewer.view_logs.get_or_create(post=post)
 
     context = {
         "post": post,
+        "next_post_slug": next_post_slug,
+        "prev_post_slug": prev_post_slug,
         "is_staff": request.user.is_staff if hasattr(request, "user") else False,
     }
     return render(request, "blog/post_detail.html", context)

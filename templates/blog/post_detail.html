@@ -22,6 +22,28 @@
             </div>
         </article>
 
+        <hr class="my-4">
+
+        <nav class="d-flex justify-content-between">
+            {% if prev_post_slug %}
+                <a href="{% url 'blog:post_detail' slug=prev_post_slug %}" class="btn btn-outline-secondary">
+                    &larr; Previous post
+                </a>
+            {% else %}
+                <div></div>
+            {% endif %}
+            <a href="{% url 'blog:post_list' %}" class="btn btn-outline-secondary mx-2">
+                All posts
+            </a>
+            {% if next_post_slug %}
+                <a href="{% url 'blog:post_detail' slug=next_post_slug %}" class="btn btn-outline-secondary">
+                    Next post &rarr;
+                </a>
+            {% else %}
+                <div></div>
+            {% endif %}
+        </nav>
+
         {% if is_staff %}
         <div class="mt-4 p-3 border rounded bg-light">
             <h6 class="mb-3">Viewers ({{ post.viewlog_set.count }})</h6>
