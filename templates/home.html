@@ -7,8 +7,33 @@
     <div class="col-md-6">
         <div class="text-center mb-4">
             <h1>Welcome to the Blog</h1>
-            <p class="text-muted">Enter your name below to start reading.</p>
+            <p class="text-muted mb-0">
+                Read articles, and keep track of what you've already seen.
+            </p>
+            <p class="text-muted small mb-3">
+                Simply enter a username to get started—there's no password to remember.
+                Your username lets you track which posts you've read.
+            </p>
+            <p class="text-muted small mb-3">
+                Please make the username
+                somewhat unique and memorable as since there is no password, someone else could
+                use the same name.
+            </p>
+            <p class="text-muted small mb-3">
+                You will need to enter this name each time you visit since this site does not use
+                cookies to remember your browser.
+            </p>
+            <p class="text-muted small mb-3">
+                Technically, the &quot;username&quot; could be anything.  So long as you type the same
+                &quot;username&quot; the next time, the site will show you which articles you've read.
+            </p>
         </div>
+
+        {% if is_staff %}
+        <div class="text-center mb-4">
+            <a href="/admin/blog/post/add/" class="btn btn-success">Create a Post</a>
+        </div>
+        {% endif %}
 
         {% if error %}
             <div class="alert alert-danger">{{ error }}</div>
