@@ -115,3 +115,48 @@ Collect the static files (custom css and files used by the built-in admin site).
 Restart the web app one more time just to make sure all changes are applied.
 
 And now, the [site](http://<username>.pythonanywhere.com) should be up.
+
+# Updating
+
+The commands as done in an actual update.  I 
+```
+01:25 ~ $ workon simple-blog-site-venv
+(simple-blog-site-venv) 01:50 ~/simple-blog-site (main)$ git pull
+(simple-blog-site-venv) 01:50 ~/simple-blog-site (main)$ python -m pip install -r requirements.txt --upgrade
+(simple-blog-site-venv) 01:55 ~/simple-blog-site (main)$ ./manage.py migrate
+(simple-blog-site-venv) 01:55 ~/simple-blog-site (main)$ ./manage.py collectstatic --noinput
+(simple-blog-site-venv) 01:57 ~/simple-blog-site (main)$ cd
+(simple-blog-site-venv) 01:57 ~ $ deactivate 
+01:57 ~ $ python token/webapps.py --reload
+```
+
+Copy/paste to terminal to create a script to do the above.
+```
+cd
+cat << EOF > update.sh 
+#! /usr/bin/env bash
+if [[ -z "${PYTHONANYWHERE_DOMAIN+x}" ]]; then
+    echo "PYTHONANYWHERE_DOMAIN is not set.  This script is to only be used on PythonAnywhere."
+    exit 1
+fi
+cd simple-blog-site
+echo "Updating repo..."
+git pull
+echo "Activating environment..."
+. ~/.virtualenvs/simple-blog-site-env/bin/activate
+# Could not get to work: workon simple-blog-site-env
+echo "Updating environment..."
+python -m pip install pip --upgrade
+python -m pip install -r requirements.txt --upgrade
+echo "Running migrations..."
+./manage.py migrate
+echo "Collecting static files..."
+./manage.py collectstatic --noinput
+echo "Closing down..."
+deactivate
+cd
+echo "Reloading the site..."
+python token/webapps.py
+echo "Done."
+EOF
+```
