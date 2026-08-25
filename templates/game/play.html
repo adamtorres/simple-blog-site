@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ game.title }} - Games - Simple Blog{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>{{ game.title }}</h2>
+            <a href="{% url 'game:game_list' %}" class="btn btn-outline-secondary">
+                &larr; Back to Games
+            </a>
+        </div>
+
+        {% if game.description %}
+        <p class="text-muted mb-3">{{ game.description }}</p>
+        {% endif %}
+
+        <div class="game-frame-wrapper">
+            <iframe
+                src="{% static game.template_file %}"
+                title="{{ game.title }}"
+                class="game-frame"
+                width="100%"
+                height="600"
+                frameborder="0"
+                allowfullscreen
+            ></iframe>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .game-frame-wrapper {
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #f8f9fa;
+    }
+    .game-frame {
+        display: block;
+        width: 100%;
+    }
+</style>
+{% endblock %}

@@ -13,6 +13,7 @@
         <div class="container">
             <a class="navbar-brand" href="{% url 'blog:home' %}">Simple Blog</a>
             <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{% url 'game:game_list' %}">Games</a>
                 {% if request.session.viewer_id %}
                     <a class="nav-link" href="{% url 'blog:post_list' %}">All Posts</a>
                     <span class="nav-link text-muted">Welcome, {{ request.session.viewer_id }}</span>

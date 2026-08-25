@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Game controller icon -->
+  <rect x="4" y="12" width="56" height="40" rx="20" ry="20" fill="none" stroke="#776e65" stroke-width="3"/>
+  <!-- Left D-pad -->
+  <rect x="14" y="22" width="10" height="4" rx="1" fill="#776e65"/>
+  <rect x="18" y="18" width="4" height="12" rx="1" fill="#776e65"/>
+  <!-- Right buttons -->
+  <circle cx="44" cy="24" r="2.5" fill="#776e65"/>
+  <circle cx="50" cy="28" r="2.5" fill="#776e65"/>
+  <circle cx="38" cy="28" r="2.5" fill="#776e65"/>
+  <circle cx="44" cy="32" r="2.5" fill="#776e65"/>
+  <!-- Bottom bar -->
+  <rect x="22" y="36" width="20" height="4" rx="2" fill="#776e65"/>
+</svg>
