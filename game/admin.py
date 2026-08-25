@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html
 
 from .models import Game
 
@@ -20,7 +21,10 @@ class GameAdmin(admin.ModelAdmin):
 
     def thumbnail_preview(self, obj):
         if obj.thumbnail:
-            return f'<img src="{obj.thumbnail.url}" style="height:40px;" />'
+            return format_html(
+                '<img src="{}" style="height:40px;" />',
+                obj.thumbnail.url,
+            )
         return "—"
 
     thumbnail_preview.allow_tags = True
