@@ -143,8 +143,8 @@ cd simple-blog-site
 echo "Updating repo..."
 git pull
 echo "Activating environment..."
-. ~/.virtualenvs/simple-blog-site-env/bin/activate
-# Could not get to work: workon simple-blog-site-env
+. ~/.virtualenvs/simple-blog-site-venv/bin/activate
+# Could not get to work: workon simple-blog-site-venv
 echo "Updating environment..."
 python -m pip install pip --upgrade
 python -m pip install -r requirements.txt --upgrade
