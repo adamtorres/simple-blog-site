@@ -20,8 +20,8 @@
                 use the same name.
             </p>
             <p class="text-muted small mb-3">
-                You will need to enter this name each time you visit since this site does not use
-                cookies to remember your browser.
+                Your browser is remembered via a cookie so you can return anytime and continue
+                reading where you left off.
             </p>
             <p class="text-muted small mb-3">
                 Technically, the &quot;username&quot; could be anything.  So long as you type the same
@@ -45,7 +45,7 @@
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="username" class="form-label">Your Name</label>
-                        <input type="text" class="form-control" id="username" name="username" autofocus required>
+                        <input type="text" class="form-control" id="username" name="username" value="{{ saved_username|default:'' }}" autofocus required>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Start Reading</button>
                 </form>
