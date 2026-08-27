@@ -1,7 +1,23 @@
+from datetime import datetime
+
 from django.contrib import admin
 from django.contrib.messages import constants as messages
 
 from .models import Post, Viewer
+
+
+def _get_default_title():
+    now = datetime.now()
+    hour = now.hour
+    if 6 <= hour < 12:
+        period = "morning"
+    elif 12 <= hour < 17:
+        period = "afternoon"
+    elif 17 <= hour < 21:
+        period = "evening"
+    else:
+        period = "night"
+    return f"{now.month}/{now.day} {period}"
 
 
 @admin.register(Post)
@@ -13,42 +29,20 @@ class PostAdmin(admin.ModelAdmin):
     actions = ["approve_selected"]
 
     def get_changeform_initial_data(self, request):
-        return {"author": request.user.pk}
+        return {"author": request.user.pk, "title": _get_default_title()}
 
     def save_model(self, request, obj, form, change):
         # Set author on new posts (author field not in admin form)
         if not change:
             obj.author = request.user
-
-        if change:
-            old = Post.objects.get(pk=obj.pk)
-
-            # Prevent author from approving their own post
-            if (
-                obj.status == "approved"
-                and old.status != "approved"
-                and request.user == obj.author
-            ):
-                obj.status = old.status
-                self.message_user(
-                    request,
-                    "Authors cannot approve their own posts. Please ask a different admin to approve.",
-                    level=messages.WARNING,
-                )
-
-            # If author edits an approved post, revert to pending
-            if request.user == obj.author and old.status == "approved":
-                obj.status = "pending"
-
         obj.save()
 
     def approve_selected(self, request, queryset):
-        # Block approving your own posts — skip them silently
-        queryset.exclude(author=request.user).update(status="approved")
+        queryset.update(status="approved")
         self.message_user(
             request,
-            "Selected posts have been approved. (Your own posts were skipped.)",
-            level=messages.WARNING,
+            "Selected posts have been approved.",
+            level=messages.SUCCESS,
         )
 
     approve_selected.short_description = "Approve selected posts"

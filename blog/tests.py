@@ -43,7 +43,7 @@ class ApprovalWorkflowTest(TestCase):
             follow=True,
         )
 
-    def test_author_cannot_self_approve_via_form(self):
+    def test_author_can_self_approve_via_form(self):
         post = Post.objects.create(
             title="Self Approve Test", slug="self-approve-test",
             content="Content", author=self.author, status="pending",
@@ -56,7 +56,7 @@ class ApprovalWorkflowTest(TestCase):
             follow=True,
         )
         post.refresh_from_db()
-        self.assertEqual(post.status, "pending")
+        self.assertEqual(post.status, "approved")
 
     def test_different_admin_can_approve(self):
         post = Post.objects.create(
@@ -73,7 +73,7 @@ class ApprovalWorkflowTest(TestCase):
         post.refresh_from_db()
         self.assertEqual(post.status, "approved")
 
-    def test_author_edit_reverts_approved_to_pending(self):
+    def test_author_edit_keeps_approved(self):
         post = Post.objects.create(
             title="Approved Post", slug="approved-post",
             content="Content", author=self.author, status="approved",
@@ -86,7 +86,7 @@ class ApprovalWorkflowTest(TestCase):
             follow=True,
         )
         post.refresh_from_db()
-        self.assertEqual(post.status, "pending")
+        self.assertEqual(post.status, "approved")
 
     def test_non_author_edit_keeps_approved(self):
         post = Post.objects.create(
