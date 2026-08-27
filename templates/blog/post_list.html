@@ -7,6 +7,14 @@
     <div class="col-lg-10">
         <h1 class="mb-4">All Posts</h1>
 
+        {% if unread_count > 0 %}
+        <div class="mb-3">
+            <a href="{% url 'blog:unread_posts' %}" class="btn btn-primary">
+                &#x1F4E0; Read all {{ unread_count }} unread post{{ unread_count|pluralize }} &rarr;
+            </a>
+        </div>
+        {% endif %}
+
         {% if page_obj %}
         <div class="table-responsive">
             <table class="table table-hover align-middle">

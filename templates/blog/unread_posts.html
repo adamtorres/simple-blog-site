@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load mdfilters %}
+
+{% block title %}Unread Posts - Simple Blog{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="mb-4">Unread Posts</h1>
+
+        {% if posts %}
+            {% for post in posts %}
+            <article class="mb-5 pb-4">
+                <h2>
+                    <a href="{{ post.get_absolute_url }}" class="text-decoration-none">
+                        {{ post.title }}
+                    </a>
+                </h2>
+                <p class="text-muted mb-3">
+                    <strong>{{ post.author.get_full_name|default:post.author.username }}</strong>
+                    &middot; {{ post.created_at|date:"F j, Y \a\t g:i A" }}
+                </p>
+                <div class="post-content">
+                    {{ post.content|render_markdown|safe }}
+                </div>
+                <hr class="my-4">
+            </article>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                <strong>You're all caught up!</strong> There are no unread posts at this time.
+            </div>
+        {% endif %}
+
+        <a href="{% url 'blog:post_list' %}" class="btn btn-outline-secondary">
+            &larr; Back to all posts
+        </a>
+    </div>
+</div>
+{% endblock %}

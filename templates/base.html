@@ -15,6 +15,7 @@
             <div class="navbar-nav ms-auto">
                 <a class="nav-link" href="{% url 'game:game_list' %}">Games</a>
                 {% if request.session.viewer_id %}
+                    <a class="nav-link" href="{% url 'blog:unread_posts' %}">Unread</a>
                     <a class="nav-link" href="{% url 'blog:post_list' %}">All Posts</a>
                     <span class="nav-link">Logged in as {{ request.session.viewer_username }}</span>
                     <a class="nav-link" href="{% url 'blog:viewer_logout' %}">Logout</a>

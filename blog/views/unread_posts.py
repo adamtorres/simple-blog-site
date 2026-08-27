@@ -1,5 +1,4 @@
-from django.core.paginator import Paginator
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from blog.models import Post, Viewer
 
@@ -28,31 +27,29 @@ def _get_viewer(request):
     return None
 
 
-def post_list(request):
-    """Paginated list of all posts with read/unread status."""
+def unread_posts(request):
+    """Show all unread approved posts consolidated on one page, ordered oldest first."""
     viewer = _get_viewer(request)
 
     if viewer is None:
         return redirect("blog:home")
 
-    all_posts = Post.objects.filter(status="approved")
-    paginator = Paginator(all_posts, 10)
-    page_number = request.GET.get("page", 1)
-    page_obj = paginator.get_page(page_number)
-
-    viewer_post_ids = set(viewer.view_logs.values_list("post_id", flat=True))
-
-    # Count unread approved posts.
-    approved_post_ids = set(
-        Post.objects.filter(status="approved").values_list("id", flat=True)
+    # Fetch approved posts the viewer has NOT yet read, oldest first.
+    viewed_post_ids = viewer.view_logs.values_list("post_id", flat=True)
+    unread_posts_qs = (
+        Post.objects.filter(status="approved")
+        .exclude(id__in=viewed_post_ids)
+        .order_by("created_at")
     )
-    unread_count = len(approved_post_ids - viewer_post_ids)
+
+    # Mark all unread posts as read (create ViewLog entries if needed).
+    viewer_id = viewer.id
+    for post in unread_posts_qs:
+        viewer.view_logs.get_or_create(post=post)
 
     context = {
-        "page_obj": page_obj,
+        "posts": list(unread_posts_qs),
         "viewer": viewer,
-        "viewer_post_ids": viewer_post_ids,
-        "unread_count": unread_count,
         "is_staff": request.user.is_staff if hasattr(request, "user") else False,
     }
-    return render(request, "blog/post_list.html", context)
+    return render(request, "blog/unread_posts.html", context)
