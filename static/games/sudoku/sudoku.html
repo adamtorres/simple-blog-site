@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sudoku</title>
+  <link rel="stylesheet" href="sudoku-styles.css">
+</head>
+<body>
+  <div class="game-wrapper">
+
+    <!-- Mobile top bar -->
+    <div class="top-bar">
+      <span class="score-display" id="score-display">Time: 0:00</span>
+      <div class="top-controls">
+        <button id="mute-btn" title="Toggle sound">&#128266;</button>
+        <button id="pause-btn">Pause</button>
+      </div>
+    </div>
+
+    <!-- Main game area -->
+    <div class="game-area">
+
+      <!-- Game container with grid and overlays -->
+      <div class="game-container">
+        <div class="sudoku-grid" id="sudoku-grid"></div>
+
+        <!-- Start overlay -->
+        <div class="overlay active start-overlay" id="start-overlay">
+          <h2>Sudoku</h2>
+          <p>Choose Difficulty</p>
+          <div class="difficulty-btns">
+            <button data-diff="easy">Easy</button>
+            <button data-diff="medium">Medium</button>
+            <button data-diff="hard">Hard</button>
+          </div>
+        </div>
+
+        <!-- Pause overlay -->
+        <div class="overlay pause-overlay" id="pause-overlay">
+          <h2>PAUSED</h2>
+          <p>Press P or tap Resume</p>
+          <button id="resume-btn-overlay">Resume</button>
+        </div>
+
+        <!-- Win overlay -->
+        <div class="overlay" id="win-overlay">
+          <h2>Congratulations!</h2>
+          <p id="win-stats">Time: 0:00 | Mistakes: 0</p>
+          <button id="new-game-btn">New Game</button>
+          <button id="quit-btn" class="secondary">Quit</button>
+        </div>
+
+        <!-- Quit overlay -->
+        <div class="overlay quit-overlay" id="quit-overlay">
+          <h2>Thanks for Playing!</h2>
+          <button id="play-again-btn">Play Again</button>
+        </div>
+      </div>
+
+      <!-- Side panel (desktop) -->
+      <div class="side-panel">
+        <div class="info-box">
+          <h3>Time</h3>
+          <p class="value" id="timer-panel">0:00</p>
+        </div>
+        <div class="info-box">
+          <h3>Mistakes</h3>
+          <p class="value" id="mistakes-panel">0</p>
+        </div>
+        <div class="info-box">
+          <h3>Difficulty</h3>
+          <div class="controls-section">
+            <select id="difficulty-select">
+              <option value="easy">Easy</option>
+              <option value="medium" selected>Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+            <button id="start-new-btn">Start New Game</button>
+          </div>
+        </div>
+        <div class="info-box">
+          <h3>Options</h3>
+          <div class="controls-section">
+            <label><input type="checkbox" id="error-toggle"> Highlight Errors</label>
+            <button id="pencil-mode-btn">Pencil Mode: OFF</button>
+          </div>
+        </div>
+        <div class="info-box">
+          <h3>Clear Pencils</h3>
+          <div class="pencil-clear-btns">
+            <button id="clear-all-pencils">All</button>
+            <button id="clear-row-pencils">Row</button>
+            <button id="clear-col-pencils">Col</button>
+            <button id="clear-box-pencils">Box</button>
+          </div>
+        </div>
+        <div class="info-box">
+          <h3>Controls</h3>
+          <div class="legend">
+            <div><span>Select</span><kbd>1-9</kbd></div>
+            <div><span>Navigate</span><kbd>Arrow Keys</kbd></div>
+            <div><span>Erase</span><kbd>Bksp Del</kbd></div>
+            <div><span>Pencil</span><kbd>N</kbd></div>
+            <div><span>Pause</span><kbd>P</kbd></div>
+            <div><span>Mute</span><kbd>M</kbd></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile on-screen controls -->
+    <div class="mobile-controls">
+      <div class="num-pad" id="num-pad"></div>
+      <div class="action-btns">
+        <button id="mobile-erase">Erase</button>
+        <button id="mobile-pencil">Pencil</button>
+        <button id="mobile-mute">Mute</button>
+        <button id="mobile-pause">Pause</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="sudoku-sounds.js"></script>
+  <script src="sudoku-core.js"></script>
+  <script src="sudoku-ui.js"></script>
+</body>
+</html>
