@@ -92,6 +92,11 @@
       var isGiven = puzzle[i] !== 0;
       var rc = SudokuCore.indexToRC(i);
 
+      // Add number text
+      if (val !== 0) {
+        cell.appendChild(document.createTextNode(String(val)));
+      }
+
       if (isGiven) cell.classList.add('given');
       else if (val !== 0) cell.classList.add('user-entry');
 
@@ -173,40 +178,47 @@
   }
 
   function handleKeydown(e) {
-    if (SudokuCore.getState() !== 'playing') return;
+    var state = SudokuCore.getState();
+    // Allow P key in both playing and paused states
+    if (state !== 'playing' && state !== 'paused') return;
     var key = e.key;
 
-    if (key >= '1' && key <= '9') {
-      e.preventDefault();
-      SudokuCore.enterNumber(parseInt(key));
-    } else if (key === 'Backspace' || key === 'Delete') {
-      e.preventDefault();
-      SudokuCore.clearCell();
-    } else if (key === 'ArrowUp') {
-      e.preventDefault();
-      moveSelection(-1, 0);
-    } else if (key === 'ArrowDown') {
-      e.preventDefault();
-      moveSelection(1, 0);
-    } else if (key === 'ArrowLeft') {
-      e.preventDefault();
-      moveSelection(0, -1);
-    } else if (key === 'ArrowRight') {
-      e.preventDefault();
-      moveSelection(0, 1);
-    } else if (key === 'p' || key === 'P') {
+    if (state === 'playing') {
+      if (key >= '1' && key <= '9') {
+        e.preventDefault();
+        SudokuCore.enterNumber(parseInt(key));
+      } else if (key === 'Backspace' || key === 'Delete') {
+        e.preventDefault();
+        SudokuCore.clearCell();
+      } else if (key === 'ArrowUp') {
+        e.preventDefault();
+        moveSelection(-1, 0);
+      } else if (key === 'ArrowDown') {
+        e.preventDefault();
+        moveSelection(1, 0);
+      } else if (key === 'ArrowLeft') {
+        e.preventDefault();
+        moveSelection(0, -1);
+      } else if (key === 'ArrowRight') {
+        e.preventDefault();
+        moveSelection(0, 1);
+      } else if (key === 'n' || key === 'N') {
+        e.preventDefault();
+        var mode = SudokuCore.getPencilMode();
+        SudokuCore.setPencilMode(!mode);
+        setPencilButtonUI();
+      } else if (key === 'm' || key === 'M') {
+        e.preventDefault();
+        SudokuSounds.toggleMute();
+        updateMuteIcon();
+      }
+    }
+
+    // P key works in both states
+    if ((key === 'p' || key === 'P') && !e.ctrlKey && !e.metaKey) {
       e.preventDefault();
       if (SudokuCore.getState() === 'playing') SudokuCore.pauseGame();
       else if (SudokuCore.getState() === 'paused') SudokuCore.resumeGame();
-    } else if (key === 'n' || key === 'N') {
-      e.preventDefault();
-      var mode = SudokuCore.getPencilMode();
-      SudokuCore.setPencilMode(!mode);
-      setPencilButtonUI();
-    } else if (key === 'm' || key === 'M') {
-      e.preventDefault();
-      SudokuSounds.toggleMute();
-      updateMuteIcon();
     }
   }
 

@@ -145,6 +145,6 @@ const SudokuCore = (() => {
     clearAllPencils, clearRowPencils, clearColPencils, clearBoxPencils,
     getState, getBoard, getPuzzle, getSolution, getPencils, getDifficulty, getHighlightErrors,
     getPencilMode, getSelectedCell, getMistakeCount, getTimerSeconds,
-    setHighlightErrors, setPencilMode, rcToIndex,
+    setHighlightErrors, setPencilMode, rcToIndex, indexToRC,
   };
 })();
