@@ -42,7 +42,7 @@ The second reason is a simpler way to keep disparate people updated on a topic. 
    cp .env.example .env
    ```
 
-   Edit `.env` and set a proper `DJANGO_SECRET_KEY` before deploying to production.
+    Edit `.env` to customize settings. At minimum, set a proper `DJANGO_SECRET_KEY` before deploying to production. Other available variables: `DJANGO_DEBUG`, `DJANGO_ALLOWED_HOSTS`, `DJANGO_TIME_ZONE`.
 
 4. **Run migrations:**
 
@@ -75,6 +75,7 @@ The Django admin interface is at `/admin/`.
 | `DJANGO_SECRET_KEY` | Django secret key for cryptographic signing | (development fallback) |
 | `DJANGO_DEBUG` | Enable debug mode | `True` |
 | `DJANGO_ALLOWED_HOSTS` | Comma-separated list of allowed hostnames | `testserver,localhost,127.0.0.1` |
+| `DJANGO_TIME_ZONE` | Display timezone for dates and times | `UTC` |
 
 ## Features
 
@@ -86,19 +87,33 @@ The Django admin interface is at `/admin/`.
 
 ```
 .
-├── blog/                 # Blog app (models, views, templates)
-│   ├── migrations/
+├── blog/                 # Blog app
+│   ├── migrations/       # Database migrations
+│   ├── management/
+│   │   └── commands/     # Custom management commands
 │   ├── templatetags/     # Custom template filters
-│   ├── views/            # View functions
+│   ├── views/            # View functions (one file per view)
+│   ├── admin.py
 │   ├── models.py
+│   ├── tests.py
+│   └── urls.py
+├── game/                 # Games app
+│   ├── migrations/
+│   ├── admin.py
+│   ├── models.py
+│   ├── tests.py
 │   ├── urls.py
-│   └── admin.py
+│   └── views.py
 ├── simple_blog/          # Project settings
 │   ├── settings.py
 │   ├── urls.py
+│   ├── asgi.py
 │   └── wsgi.py
 ├── static/               # Static files (CSS, JS)
-├── templates/            # Global templates
+├── templates/            # Templates
+│   ├── blog/             # Blog templates
+│   ├── game/             # Game templates
+│   └── base.html         # Base template
 ├── .env.example          # Environment template
 ├── requirements.txt
 └── manage.py
