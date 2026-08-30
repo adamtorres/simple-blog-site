@@ -79,7 +79,7 @@ def generate_catdoku(n):
 
 def animaldoku_generate_grid(request):
     """API endpoint: generate a new animaldoku grid."""
-    grid_size = int(request.POST.get("grid_size", 10))
+    grid_size = int(request.GET.get("grid_size", 10))
     cats, region_grid = generate_catdoku(grid_size)
 
     animal = random.choice(ANIMAL_TYPES)

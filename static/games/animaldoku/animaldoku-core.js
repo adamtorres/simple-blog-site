@@ -146,15 +146,15 @@
 
   function fetchNewGrid(callback) {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', apiEndpoint, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    var url = apiEndpoint + '?grid_size=' + GRID_SIZE;
+    xhr.open('GET', url, true);
     xhr.onload = function() {
       if (xhr.status === 200) {
         var data = JSON.parse(xhr.responseText);
         callback(data);
       }
     };
-    xhr.send('grid_size=' + GRID_SIZE);
+    xhr.send();
   }
 
   function resetGame() {
