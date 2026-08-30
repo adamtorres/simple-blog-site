@@ -40,6 +40,7 @@
   let animationFrameId = null;
   let hardDropAnimating = false;
   let hardDropFrame = 0;
+  let gameOverTriggered = false;
 
   function formatTime(seconds) {
     return Math.floor(seconds / 60) + ':' + String(seconds % 60).padStart(2, '0');
@@ -139,6 +140,7 @@
 
   function gameLoop() {
     render(); renderPreview(); updateDisplay();
+    if (TetrisCore.getGameOver() && !gameOverTriggered) { handleGameOver(); return; }
     animationFrameId = requestAnimationFrame(gameLoop);
   }
 
@@ -240,6 +242,8 @@
   }
 
   function handleGameOver() {
+    gameOverTriggered = true;
+    TetrisCore.stopGameLoop();
     TetrisSounds.playGameOver();
     gameStats.innerHTML = 'Score: ' + TetrisCore.getScore() +
       '<br>Level: ' + TetrisCore.getLevel() + '<br>Lines: ' + TetrisCore.getLinesCleared();
@@ -247,6 +251,7 @@
   }
 
   function startNewGame(mode) {
+    gameOverTriggered = false;
     hideAllOverlays();
     gameContainer.classList.remove('paused');
     TetrisCore.resetGame(mode);
