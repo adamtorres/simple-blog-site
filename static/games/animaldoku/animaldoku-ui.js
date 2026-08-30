@@ -210,7 +210,7 @@
     var gs = AnimaldokuCore.getGridSize();
     var animalType = AnimaldokuCore.getAnimalType();
     var variation = AnimaldokuCore.getAnimalVariation();
-    if (!grid || !regionGrid || !colors) return;
+    if (!grid || !regionGrid || regionGrid.length === 0 || !colors || colors.length === 0 || !gs) return;
 
     ctx.fillStyle = '#1a1a2e';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
