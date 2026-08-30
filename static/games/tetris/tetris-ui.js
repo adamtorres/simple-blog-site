@@ -244,6 +244,7 @@
   function handleGameOver() {
     gameOverTriggered = true;
     TetrisCore.stopGameLoop();
+    if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; }
     TetrisSounds.playGameOver();
     gameStats.innerHTML = 'Score: ' + TetrisCore.getScore() +
       '<br>Level: ' + TetrisCore.getLevel() + '<br>Lines: ' + TetrisCore.getLinesCleared();
@@ -255,8 +256,9 @@
     hideAllOverlays();
     gameContainer.classList.remove('paused');
     TetrisCore.resetGame(mode);
-    if (!animationFrameId) { gameLoop(); }
     TetrisCore.startGameLoop();
+    if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; }
+    gameLoop();
   }
 
   function quitToGameList() {
@@ -284,20 +286,30 @@
   }
 
   function setupOverlayButtons() {
-    const timedBtn = document.getElementById('new-timed-btn');
-    const classicBtn = document.getElementById('new-classic-btn');
-    if (timedBtn) timedBtn.addEventListener('click', function() { startNewGame('timed'); });
-    if (classicBtn) classicBtn.addEventListener('click', function() { startNewGame('classic'); });
     const resumeBtn = document.getElementById('resume-btn');
     if (resumeBtn) resumeBtn.addEventListener('click', function() { handlePause(); });
-    const playAgainBtn = document.getElementById('play-again-btn');
+
     const quitBtn = document.getElementById('quit-btn');
-    if (playAgainBtn) playAgainBtn.addEventListener('click', function() { startNewGame(TetrisCore.getGameMode()); });
     if (quitBtn) quitBtn.addEventListener('click', function() { quitToGameList(); });
-    const playAgain2Btn = document.getElementById('play-again-btn-2');
-    if (playAgain2Btn) playAgain2Btn.addEventListener('click', function() { startNewGame(TetrisCore.getGameMode()); });
+
     if (muteBtn) muteBtn.addEventListener('click', function() { handleMute(); });
     if (pauseBtn) pauseBtn.addEventListener('click', function() { if (TetrisCore.getGameRunning()) handlePause(); });
+
+    // Event delegation for mode selection (start overlay)
+    if (startOverlay) {
+      startOverlay.addEventListener('click', function(e) {
+        if (e.target.id === 'new-timed-btn') startNewGame('timed');
+        if (e.target.id === 'new-classic-btn') startNewGame('classic');
+      });
+    }
+
+    // Event delegation for mode selection (game over overlay)
+    if (gameOverOverlay) {
+      gameOverOverlay.addEventListener('click', function(e) {
+        if (e.target.id === 'new-timed-btn') startNewGame('timed');
+        if (e.target.id === 'new-classic-btn') startNewGame('classic');
+      });
+    }
   }
 
   function init() {

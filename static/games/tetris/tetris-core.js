@@ -293,7 +293,10 @@ const TetrisCore = (() => {
           freezePiece();
           const lines = clearLines();
           updateScore(lines);
-          spawnPiece();
+          if (!spawnPiece()) {
+            stopGameLoop();
+            return;
+          }
         }
         scheduleDrop();
       }
