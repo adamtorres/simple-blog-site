@@ -36,6 +36,10 @@ Static files are stored in `static` folder.  Ignore the `public` folder as Djang
 * Use a ghost piece to show where the current piece would land.
 * include a "Next piece" preview
 
+# Sticking point(s)
+
+* Piece rotation has been an issue.  Some pieces would change or not rotate at all.  Pay a little more attention to make sure the rotation happens as expected.
+
 # Generic Gameplay
 * Once a game has ended allow the user to start a new one or quit.
     * quitting takes the user to the game list page.
