@@ -3,6 +3,7 @@ const SudokuCore = (() => {
   const GRID_SIZE = 9;
   const BOX_SIZE = 3;
   const TOTAL_CELLS = GRID_SIZE * GRID_SIZE;
+  const FULL_CANDIDATES = 0x3FE; // bits 1..9 set
   const DIFFICULTY_REMOVALS = { easy: 30, medium: 40, hard: 50 };
 
   let puzzle = [], solution = [], board = [], pencils = [];
@@ -32,6 +33,68 @@ const SudokuCore = (() => {
         if (bd[(sr+r)*GRID_SIZE+(sc+c)] === num) return false;
     return true;
   }
+  function boxIndex(row, col) {
+    return Math.floor(row / BOX_SIZE) * BOX_SIZE + Math.floor(col / BOX_SIZE);
+  }
+  function popcount(x) {
+    let n = 0;
+    while (x) { n++; x &= x - 1; }
+    return n;
+  }
+  function buildMasks(bd) {
+    const rows = new Array(GRID_SIZE).fill(0);
+    const cols = new Array(GRID_SIZE).fill(0);
+    const boxes = new Array(GRID_SIZE).fill(0);
+    for (let r = 0; r < GRID_SIZE; r++) {
+      for (let c = 0; c < GRID_SIZE; c++) {
+        const v = bd[r * GRID_SIZE + c];
+        if (v !== 0) {
+          const bit = 1 << v;
+          rows[r] |= bit; cols[c] |= bit; boxes[boxIndex(r, c)] |= bit;
+        }
+      }
+    }
+    return { rows, cols, boxes };
+  }
+  function candidatesFor(r, c, rows, cols, boxes) {
+    return FULL_CANDIDATES & ~(rows[r] | cols[c] | boxes[boxIndex(r, c)]);
+  }
+  // Counts solutions of bd by backtracking. Stops early once count reaches limit.
+  // Picks the empty cell with fewest candidates each step for speed.
+  function countSolutions(bd, limit) {
+    const { rows, cols, boxes } = buildMasks(bd);
+    let count = 0;
+    (function search() {
+      if (count >= limit) return;
+      let best = -1, bestCands = 0, bestN = GRID_SIZE + 1;
+      for (let r = 0; r < GRID_SIZE && bestN > 1; r++) {
+        for (let c = 0; c < GRID_SIZE; c++) {
+          if (bd[r * GRID_SIZE + c] !== 0) continue;
+          const cands = candidatesFor(r, c, rows, cols, boxes);
+          const n = popcount(cands);
+          if (n === 0) return; // dead end, no solution through this branch
+          if (n < bestN) {
+            bestN = n; best = r * GRID_SIZE + c; bestCands = cands;
+            if (n === 1) break;
+          }
+        }
+      }
+      if (best === -1) { count++; return; } // no empty cells: one solution found
+      const r = Math.floor(best / GRID_SIZE), c = best % GRID_SIZE;
+      const bx = boxIndex(r, c);
+      for (let v = 1; v <= GRID_SIZE; v++) {
+        const bit = 1 << v;
+        if (!(bestCands & bit)) continue;
+        bd[best] = v;
+        rows[r] |= bit; cols[c] |= bit; boxes[bx] |= bit;
+        search();
+        rows[r] ^= bit; cols[c] ^= bit; boxes[bx] ^= bit;
+        bd[best] = 0;
+        if (count >= limit) return;
+      }
+    })();
+    return count;
+  }
   function generateSolution() {
     const b = new Array(TOTAL_CELLS).fill(0);
     (function fill() {
@@ -56,7 +119,16 @@ const SudokuCore = (() => {
     const removals = DIFFICULTY_REMOVALS[diff] || 40;
     for (const idx of positions) {
       if (removed >= removals) break;
-      puz[idx] = 0; removed++;
+      const backup = puz[idx];
+      puz[idx] = 0;
+      // Keep the removal only while the puzzle still has exactly one solution.
+      // Removing a cell from a symmetry pattern (e.g. a unique rectangle)
+      // can create a second solution, so restore it when that happens.
+      if (countSolutions(puz, 2) === 1) {
+        removed++;
+      } else {
+        puz[idx] = backup;
+      }
     }
     return puz;
   }
