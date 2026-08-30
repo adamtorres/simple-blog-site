@@ -1,0 +1,322 @@
+/* tetris-styles.css — All styling for Tetris game */
+:root {
+  --bg: #1a1a2e;
+  --surface: #16213e;
+  --surface2: #0f3460;
+  --accent: #e94560;
+  --text: #eee;
+  --text-dim: #999;
+  --cell-size: 24px;
+
+  /* Cheerful piece colors */
+  --color-1: #ff6b6b; /* red */
+  --color-2: #4ecdc4; /* teal */
+  --color-3: #45b7d1; /* blue */
+  --color-4: #f9ca24; /* yellow */
+  --color-5: #6c5ce7; /* purple */
+  --color-6: #a8e6cf; /* green */
+  --color-7: #fd79a8; /* pink */
+
+  --selected: #ff7043;
+  --success: #66bb6a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.game-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* Top bar (mobile) */
+.top-bar {
+  display: none;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+.top-bar .score-display {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.top-controls button {
+  background: var(--surface2);
+  border: none;
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-left: 4px;
+}
+
+/* Main game area */
+.game-area {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+/* Game container */
+.game-container {
+  position: relative;
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 8px;
+  display: inline-block;
+}
+
+#tetris-grid {
+  display: block;
+  background: #0a0a1a;
+  border-radius: 4px;
+}
+
+/* Next piece preview */
+.preview-box {
+  background: #0a0a1a;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.preview-label {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+
+/* Overlay system */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.overlay h2 {
+  font-size: 1.8rem;
+  margin-bottom: 16px;
+}
+.overlay p {
+  font-size: 1rem;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  text-align: center;
+}
+.overlay .game-stats {
+  font-size: 1.1rem;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.overlay button {
+  background: var(--surface2);
+  border: none;
+  color: var(--text);
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin: 6px;
+  min-width: 160px;
+}
+.overlay button:hover {
+  background: var(--accent);
+}
+.overlay button.secondary {
+  background: transparent;
+  border: 1px solid var(--text-dim);
+}
+.overlay button.secondary:hover {
+  border-color: var(--text);
+  background: transparent;
+}
+
+/* Start overlay specific */
+.start-overlay p {
+  font-size: 1.1rem;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+/* Pause overlay */
+.pause-overlay h2 {
+  color: var(--accent);
+}
+
+/* Side panel (desktop) */
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 180px;
+}
+.info-box {
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 12px;
+}
+.info-box h3 {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.info-box .value {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+.controls-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.controls-section button,
+.controls-section select {
+  background: var(--surface2);
+  border: none;
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  width: 100%;
+}
+.controls-section button:hover {
+  background: var(--accent);
+}
+.controls-section select {
+  font-size: 0.95rem;
+}
+
+.info-box label {
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.legend {
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+.legend div {
+  display: flex;
+  justify-content: space-between;
+}
+.legend kbd {
+  background: var(--surface2);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 0.8rem;
+}
+
+/* Mobile controls */
+.mobile-controls {
+  display: none;
+  width: 100%;
+  margin-top: 12px;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+.mobile-grid-btns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  width: 100%;
+  max-width: 240px;
+}
+.mobile-grid-btns button {
+  background: var(--surface2);
+  border: none;
+  color: var(--text);
+  padding: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.4rem;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.mobile-grid-btns button:active {
+  background: var(--accent);
+}
+.action-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.action-btns button {
+  background: var(--surface2);
+  border: none;
+  color: var(--text);
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.action-btns button:active {
+  background: var(--accent);
+}
+
+/* Paused state — blur the grid */
+.game-container.paused #tetris-grid {
+  filter: blur(3px);
+  transition: filter 0.2s ease;
+}
+
+/* Responsive: mobile layout */
+@media (max-width: 640px) {
+  .top-bar {
+    display: flex;
+  }
+  .side-panel {
+    display: none;
+  }
+  .game-area {
+    flex-direction: column;
+    align-items: center;
+  }
+  .game-container {
+    padding: 4px;
+  }
+  .mobile-controls {
+    display: flex;
+  }
+}

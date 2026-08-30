@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Tetris</title>
+  <link rel="stylesheet" href="tetris-styles.css">
+</head>
+<body>
+  <div class="game-wrapper">
+
+    <!-- Mobile top bar -->
+    <div class="top-bar">
+      <span class="score-display" id="mobile-score-display">Score: 0</span>
+      <div class="top-controls">
+        <button id="mute-btn" title="Toggle sound">&#128266;</button>
+        <button id="pause-btn">Pause</button>
+      </div>
+    </div>
+
+    <!-- Main game area -->
+    <div class="game-area">
+
+      <!-- Game container with grid and overlays -->
+      <div class="game-container">
+        <div class="preview-box">
+          <span class="preview-label">Next</span>
+          <canvas id="next-piece-preview"></canvas>
+        </div>
+        <canvas id="tetris-grid"></canvas>
+
+        <!-- Start overlay -->
+        <div class="overlay active start-overlay" id="start-overlay">
+          <h2>Tetris</h2>
+          <p>Choose Game Mode</p>
+          <div class="difficulty-btns">
+            <button id="new-timed-btn">New Timed Game</button>
+            <button id="new-classic-btn">New Game</button>
+          </div>
+        </div>
+
+        <!-- Pause overlay -->
+        <div class="overlay pause-overlay" id="pause-overlay">
+          <h2>PAUSED</h2>
+          <p>Press P or tap Resume</p>
+          <button id="resume-btn">Resume</button>
+        </div>
+
+        <!-- Game over overlay -->
+        <div class="overlay" id="game-over-overlay">
+          <h2>Game Over</h2>
+          <div class="game-stats" id="game-stats"></div>
+          <button id="play-again-btn">Play Again</button>
+          <button id="quit-btn" class="secondary">Quit</button>
+        </div>
+
+        <!-- Quit overlay -->
+        <div class="overlay quit-overlay" id="quit-overlay">
+          <h2>Thanks for Playing!</h2>
+          <button id="play-again-btn-2">Play Again</button>
+        </div>
+      </div>
+
+      <!-- Side panel (desktop) -->
+      <div class="side-panel">
+        <div class="info-box">
+          <h3>Score</h3>
+          <p class="value" id="score-display">0</p>
+        </div>
+        <div class="info-box">
+          <h3>Level</h3>
+          <p class="value" id="level-display">1</p>
+        </div>
+        <div class="info-box">
+          <h3>Lines</h3>
+          <p class="value" id="lines-display">0</p>
+        </div>
+        <div class="info-box">
+          <h3>Time</h3>
+          <p class="value" id="timer-display">0:00</p>
+        </div>
+        <div class="info-box">
+          <h3>Controls</h3>
+          <div class="legend">
+            <div><span>Move</span><kbd>&larr; &rarr;</kbd></div>
+            <div><span>Rotate</span><kbd>&uarr;</kbd></div>
+            <div><span>Soft Drop</span><kbd>&darr;</kbd></div>
+            <div><span>Hard Drop</span><kbd>Space</kbd></div>
+            <div><span>Pause</span><kbd>P</kbd></div>
+            <div><span>Mute</span><kbd>M</kbd></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Mobile on-screen controls -->
+    <div class="mobile-controls">
+      <div class="mobile-grid-btns">
+        <button id="mobile-left">&#9664;</button>
+        <button id="mobile-rotate">&#8635;</button>
+        <button id="mobile-right">&#9654;</button>
+        <button id="mobile-soft-drop">&#9660;</button>
+        <button id="mobile-hard-drop">&#9660;&#9660;</button>
+        <button id="mobile-pause">II</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="tetris-sounds.js"></script>
+  <script src="tetris-core.js"></script>
+  <script src="tetris-ui.js"></script>
+</body>
+</html>
