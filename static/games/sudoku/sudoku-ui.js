@@ -57,7 +57,7 @@
 
   function buildNumPad() {
     numPad.innerHTML = '';
-    for (var n = 1; n <= 9; n++) {
+    for (let n = 1; n <= 9; n++) {
       var btn = document.createElement('button');
       btn.textContent = String(n);
       btn.addEventListener('click', function() { SudokuCore.enterNumber(n); });
