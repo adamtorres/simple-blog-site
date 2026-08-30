@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Animaldoku</title>
+  <link rel="stylesheet" href="animaldoku-styles.css">
+</head>
+<body>
+  <div class="game-wrapper">
+
+    <!-- Mobile top bar -->
+    <div class="top-bar">
+      <span class="score-display" id="mobile-lives-display">Lives: 3</span>
+      <div class="top-controls">
+        <button id="mute-btn" title="Toggle sound">&#128266;</button>
+        <button id="pause-btn">Pause</button>
+      </div>
+    </div>
+
+    <!-- Main game area -->
+    <div class="game-area">
+
+      <!-- Game container with grid and overlays -->
+      <div class="game-container">
+        <canvas id="animaldoku-grid"></canvas>
+
+        <!-- Start overlay -->
+        <div class="overlay active start-overlay" id="start-overlay">
+          <h2>Animaldoku</h2>
+          <p>Deduce where to place one animal per region, row, and column. No two animals may touch — not even diagonally!</p>
+          <div class="difficulty-btns">
+            <button id="new-game-btn">New Game</button>
+          </div>
+        </div>
+
+        <!-- Pause overlay -->
+        <div class="overlay pause-overlay" id="pause-overlay">
+          <h2>PAUSED</h2>
+          <p>Press P or tap Resume</p>
+          <button id="resume-btn">Resume</button>
+        </div>
+
+        <!-- Game over overlay -->
+        <div class="overlay" id="game-over-overlay">
+          <h2>Game Over</h2>
+          <div class="game-stats" id="game-stats"></div>
+          <div class="difficulty-btns">
+            <button id="new-game-btn-go">New Game</button>
+            <button id="quit-btn" class="secondary">Quit</button>
+          </div>
+        </div>
+
+        <!-- Quit overlay -->
+        <div class="overlay quit-overlay" id="quit-overlay">
+          <h2>Thanks for Playing!</h2>
+          <button id="play-again-btn-2">Play Again</button>
+        </div>
+      </div>
+
+      <!-- Side panel (desktop) -->
+      <div class="side-panel">
+        <div class="info-box">
+          <h3>Lives</h3>
+          <p class="value" id="lives-display">3</p>
+        </div>
+        <div class="info-box">
+          <h3>Level</h3>
+          <p class="value" id="level-display">1</p>
+        </div>
+        <div class="info-box">
+          <h3>Controls</h3>
+          <div class="legend">
+            <div><span>Mark X</span><kbd>Click</kbd></div>
+            <div><span>Place cat</span><kbd>Double-click</kbd></div>
+            <div><span>Pause</span><kbd>P</kbd></div>
+            <div><span>Mute</span><kbd>M</kbd></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Mobile on-screen controls -->
+    <div class="mobile-controls">
+      <div class="mobile-grid-btns">
+        <button id="mobile-mark">X</button>
+        <button id="mobile-place">Meow</button>
+        <button id="mobile-pause">II</button>
+        <button id="mobile-mute">&#128266;</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="animaldoku-sounds.js"></script>
+  <script src="animaldoku-core.js"></script>
+  <script src="animaldoku-ui.js"></script>
+</body>
+</html>

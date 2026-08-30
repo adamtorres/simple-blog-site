@@ -7,4 +7,5 @@ app_name = "game"
 urlpatterns = [
     path("", views.game_list, name="game_list"),
     path("<slug:slug>/", views.game_detail, name="game_detail"),
+    path("animaldoku/generate/", views.animaldoku_generate_grid, name="animaldoku_generate_grid"),
 ]
