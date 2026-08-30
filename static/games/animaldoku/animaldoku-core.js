@@ -180,7 +180,7 @@
       grid = createEmptyGrid();
 
       for (var i = 0; i < animalPositions.length; i++) {
-        grid[animalPositions[i][0]][animalPositions[i][1]] = 3;
+        grid[animalPositions[i][0]][animalPositions[i][1]] = (i === 0) ? 3 : 0;
       }
 
       gameRunning = true;

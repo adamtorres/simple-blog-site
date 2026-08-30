@@ -28,10 +28,10 @@
 
   function resizeCanvas() {
     if (!canvas) return;
-    var area = document.querySelector('.game-container');
-    var availW = area ? area.clientWidth - 12 : window.innerWidth - 40;
-    var availH = area ? area.clientHeight - 12 : window.innerHeight - 200;
-    var size = Math.min(availW, availH, 500);
+    var area = document.querySelector('.game-area');
+    var availW = (area ? area.clientWidth - 12 : window.innerWidth) - 200;
+    var availH = (area ? area.clientHeight - 12 : window.innerHeight) - 50;
+    var size = Math.max(Math.min(availW, availH, 600), 200);
     var gs = AnimaldokuCore.getGridSize() || 10;
     CELL_SIZE = Math.floor(size / gs);
     var dim = CELL_SIZE * gs;
@@ -158,6 +158,8 @@
   }
 
   function startNewGame() {
+    gameOverTriggered = false;
+    hideAllOverlays();
     gameCallback = onGameStateChange;
     AnimaldokuCore.resetGame();
   }
