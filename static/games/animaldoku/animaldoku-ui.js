@@ -7,8 +7,6 @@
   var gridOffsetX = 0, gridOffsetY = 0;
   var lastTapTime = 0;
   var lastTapCell = null;
-  var pendingCell = null;
-  var pendingAction = null;
   var animationFrameId = null;
   var gameCallback = null;
   var prevLives = 3;
@@ -100,28 +98,9 @@
     lastTapTime = now;
 
     if (isDoubleTap) {
-      var placed = AnimaldokuCore.placeCat(row, col);
-      if (placed) {
-        pendingCell = null;
-        pendingAction = null;
-        return;
-      }
-    }
-
-    if (pendingCell && pendingCell[0] === row && pendingCell[1] === col) {
-      if (pendingAction === 'place') {
-        AnimaldokuCore.placeCat(row, col);
-      }
-      pendingCell = null;
-      pendingAction = null;
+      AnimaldokuCore.placeCat(row, col);
     } else {
-      pendingCell = [row, col];
-      if (AnimaldokuCore.getGrid()[row][col] === 0) {
-        pendingAction = 'place';
-        AnimaldokuCore.toggleX(row, col);
-      } else {
-        pendingAction = null;
-      }
+      AnimaldokuCore.toggleX(row, col);
     }
   }
 
