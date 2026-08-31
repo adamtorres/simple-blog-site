@@ -103,7 +103,7 @@
         var regionCats = 0;
         for (var rr = 0; rr < GRID_SIZE; rr++) {
           for (var cc = 0; cc < GRID_SIZE; cc++) {
-            if (regionGrid[rr][cc] === regionId && grid[rr][cc] === 1) regionCats++;
+            if (regionGrid[rr][cc] === regionId && grid[rr][cc] > 0 && grid[rr][cc] !== 2) regionCats++;
           }
         }
         if (regionCats !== 1) return false;
@@ -113,7 +113,7 @@
     for (var r = 0; r < GRID_SIZE; r++) {
       var rowCats = 0;
       for (var c = 0; c < GRID_SIZE; c++) {
-        if (grid[r][c] === 1) rowCats++;
+        if (grid[r][c] > 0 && grid[r][c] !== 2) rowCats++;
       }
       if (rowCats !== 1) return false;
     }
@@ -121,20 +121,20 @@
     for (var c = 0; c < GRID_SIZE; c++) {
       var colCats = 0;
       for (var r = 0; r < GRID_SIZE; r++) {
-        if (grid[r][c] === 1) colCats++;
+        if (grid[r][c] > 0 && grid[r][c] !== 2) colCats++;
       }
       if (colCats !== 1) return false;
     }
 
     for (var r = 0; r < GRID_SIZE; r++) {
       for (var c = 0; c < GRID_SIZE; c++) {
-        if (grid[r][c] === 1) {
+        if (grid[r][c] > 0 && grid[r][c] !== 2) {
           for (var dr = -1; dr <= 1; dr++) {
             for (var dc = -1; dc <= 1; dc++) {
               if (dr === 0 && dc === 0) continue;
               var nr = r + dr, nc = c + dc;
               if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE) {
-                if (grid[nr][nc] === 1) return false;
+                if (grid[nr][nc] > 0 && grid[nr][nc] !== 2) return false;
               }
             }
           }
@@ -158,12 +158,12 @@
     xhr.send();
   }
 
-  function resetGame() {
+  function resetGame(initialLevel) {
     var savedAnimal = animalType;
     var savedVariation = animalVariation;
 
     lives = MAX_LIVES;
-    level = 1;
+    level = initialLevel !== undefined ? initialLevel : 1;
     gameOver = false;
     gameRunning = false;
     paused = false;
@@ -215,6 +215,11 @@
       gameOver = true;
       gameRunning = false;
       if (cb) cb('win');
+      // Auto-start next level after brief celebration
+      setTimeout(function() {
+        gameOver = false;
+        resetGame(level + 1);
+      }, 600);
       return true;
     }
 

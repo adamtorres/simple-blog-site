@@ -198,6 +198,10 @@
       AnimaldokuSounds.playWin();
       showGameWinStats();
       showOverlay('game-over-overlay');
+      // Clear overlay before auto-advancing to next level
+      setTimeout(function() {
+        hideOverlay('game-over-overlay');
+      }, 600);
     } else if (event === 'gameover') {
       AnimaldokuSounds.playGameOver();
       showGameOverStats();
