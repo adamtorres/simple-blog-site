@@ -13,6 +13,7 @@
   var gameRunning = false;
   var paused = false;
   var gameOver = false;
+  var debugMode = false;
   var animalType = 'cat';
   var animalVariation = 'cat-1.svg';
   var territoryColors = [];
@@ -192,7 +193,8 @@
 
   function placeCat(row, col) {
     if (!gameRunning || gameOver || paused) return false;
-    if (grid[row][col] !== 0) return false;
+    if (grid[row][col] === 3) return false;
+    if (grid[row][col] === 1) return false;
 
     var result = validateCell(row, col);
     if (!result.valid) {
@@ -237,6 +239,15 @@
     return paused;
   }
 
+  function toggleDebug() {
+    debugMode = !debugMode;
+    return debugMode;
+  }
+
+  function getDebugMode() {
+    return debugMode;
+  }
+
   function stopGameLoop() {
     gameRunning = false;
     paused = false;
@@ -260,5 +271,7 @@
     getGameOver: function() { return gameOver; },
     getGameRunning: function() { return gameRunning; },
     getPaused: function() { return paused; },
+    toggleDebug: toggleDebug,
+    getDebugMode: getDebugMode,
   };
 })();

@@ -174,6 +174,15 @@ html, body {
   font-family: monospace;
 }
 
+#debug-status {
+  color: #8888aa;
+  transition: color 0.2s;
+}
+
+#debug-status.active {
+  color: #2ed573;
+}
+
 /* --- Mobile Controls --- */
 .mobile-controls {
   display: none;

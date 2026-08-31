@@ -7,6 +7,8 @@
   var gridOffsetX = 0, gridOffsetY = 0;
   var lastTapTime = 0;
   var lastTapCell = null;
+  var pendingCell = null;
+  var pendingAction = null;
   var animationFrameId = null;
   var gameCallback = null;
   var prevLives = 3;
@@ -71,6 +73,12 @@
     if (mobileMute) mobileMute.addEventListener('click', function() {
       AnimaldokuSounds.toggleMute();
     });
+
+    var debugBtn = document.getElementById('debug-btn');
+    if (debugBtn) debugBtn.addEventListener('click', function() {
+      AnimaldokuCore.toggleDebug();
+      updateDebugIndicator();
+    });
   }
 
   function handleGridClick(e) {
@@ -92,9 +100,28 @@
     lastTapTime = now;
 
     if (isDoubleTap) {
-      AnimaldokuCore.placeCat(row, col);
+      var placed = AnimaldokuCore.placeCat(row, col);
+      if (placed) {
+        pendingCell = null;
+        pendingAction = null;
+        return;
+      }
+    }
+
+    if (pendingCell && pendingCell[0] === row && pendingCell[1] === col) {
+      if (pendingAction === 'place') {
+        AnimaldokuCore.placeCat(row, col);
+      }
+      pendingCell = null;
+      pendingAction = null;
     } else {
-      AnimaldokuCore.toggleX(row, col);
+      pendingCell = [row, col];
+      if (AnimaldokuCore.getGrid()[row][col] === 0) {
+        pendingAction = 'place';
+        AnimaldokuCore.toggleX(row, col);
+      } else {
+        pendingAction = null;
+      }
     }
   }
 
@@ -122,6 +149,10 @@
     }
     if (e.key === 'm' || e.key === 'M') {
       AnimaldokuSounds.toggleMute();
+    }
+    if (e.key === 'd' || e.key === 'D') {
+      AnimaldokuCore.toggleDebug();
+      updateDebugIndicator();
     }
   }
 
@@ -273,6 +304,28 @@
         }
       }
     }
+
+    // Draw debug indicators: green dashed circles on unplaced solution cells
+    if (AnimaldokuCore.getDebugMode()) {
+      var solutionPositions = AnimaldokuCore.getAnimalPositions();
+      ctx.setLineDash([4, 4]);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(46, 213, 115, 0.7)';
+      ctx.beginPath();
+      for (var i = 0; i < solutionPositions.length; i++) {
+        var sr = solutionPositions[i][0];
+        var sc = solutionPositions[i][1];
+        if (grid[sr][sc] !== 1) {
+          var sx = sc * CELL_SIZE + CELL_SIZE / 2;
+          var sy = sr * CELL_SIZE + CELL_SIZE / 2;
+          var radius = CELL_SIZE * 0.35;
+          ctx.moveTo(sx + radius, sy);
+          ctx.arc(sx, sy, radius, 0, Math.PI * 2);
+        }
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
   }
 
   var EMOJIS = {
@@ -294,6 +347,15 @@
     ctx.textBaseline = 'middle';
     ctx.fillText(emoji, cx, cy);
     ctx.restore();
+  }
+
+  function updateDebugIndicator() {
+    var statusEl = document.getElementById('debug-status');
+    if (statusEl) {
+      var isOn = AnimaldokuCore.getDebugMode();
+      statusEl.textContent = isOn ? 'On' : 'Off';
+      statusEl.classList.toggle('active', isOn);
+    }
   }
 
   var gameOverTriggered = false;

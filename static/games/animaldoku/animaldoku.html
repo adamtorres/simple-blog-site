@@ -13,6 +13,7 @@
     <div class="top-bar">
       <span class="score-display" id="mobile-lives-display">Lives: 3</span>
       <div class="top-controls">
+        <button id="debug-btn" title="Toggle debug mode (D)">&#128300;</button>
         <button id="mute-btn" title="Toggle sound">&#128266;</button>
         <button id="pause-btn">Pause</button>
       </div>
@@ -75,7 +76,12 @@
             <div><span>Place cat</span><kbd>Double-click</kbd></div>
             <div><span>Pause</span><kbd>P</kbd></div>
             <div><span>Mute</span><kbd>M</kbd></div>
+            <div><span>Debug mode</span><kbd>D</kbd></div>
           </div>
+        </div>
+        <div class="info-box">
+          <h3>Status</h3>
+          <p class="value" id="debug-status" class="debug-hidden">Off</p>
         </div>
       </div>
 
