@@ -12,9 +12,6 @@
   var prevLives = 3;
   var prevGameState = null;
 
-  var OVERLAY_DURATION_MS = 2500;
-  var lastStateTime = 0;
-
   function init() {
     canvas = document.getElementById('animaldoku-grid');
     if (!canvas) return;
@@ -165,20 +162,15 @@
   }
 
   function onGameStateChange(event) {
-    lastStateTime = Date.now();
     prevGameState = event;
     if (event === 'win') {
       AnimaldokuSounds.playWin();
-      setTimeout(function() {
-        showGameWinStats();
-        showOverlay('game-over-overlay');
-      }, OVERLAY_DURATION_MS);
+      showGameWinStats();
+      showOverlay('game-over-overlay');
     } else if (event === 'gameover') {
       AnimaldokuSounds.playGameOver();
-      setTimeout(function() {
-        showGameOverStats();
-        showOverlay('game-over-overlay');
-      }, OVERLAY_DURATION_MS);
+      showGameOverStats();
+      showOverlay('game-over-overlay');
     }
   }
 
@@ -283,25 +275,24 @@
     }
   }
 
+  var EMOJIS = {
+    cat: '\uD83D\uDC31', dog: '\uD83D\uDC36', horse: '\uD83D\uDC34',
+    mouse: '\uD83D\uDC2D', duck: '\uD83E\uDD86', parrot: '\uD83E\uDD9C',
+    fish: '\uD83D\uDC1F',
+  };
+
   function drawAnimal(row, col, bgColor) {
     var cx = col * CELL_SIZE + CELL_SIZE / 2;
     var cy = row * CELL_SIZE + CELL_SIZE / 2;
-    var size = CELL_SIZE * 0.35;
+    var emojiSize = Math.floor(CELL_SIZE * 0.6);
     var animalType = AnimaldokuCore.getAnimalType();
-    var variation = AnimaldokuCore.getAnimalVariation();
-    var imgSrc = 'animals/' + animalType + '/' + variation;
-
-    if (!bgColor) bgColor = '#4a4a8a';
+    var emoji = EMOJIS[animalType] || EMOJIS.cat;
 
     ctx.save();
-    ctx.translate(cx, cy);
-    ctx.fillStyle = bgColor;
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(0, 0, size, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
+    ctx.font = emojiSize + 'px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(emoji, cx, cy);
     ctx.restore();
   }
 
@@ -328,6 +319,12 @@
 
     if (over && !gameOverTriggered) {
       gameOverTriggered = true;
+      if (prevGameState === 'win') {
+        showGameWinStats();
+      } else {
+        showGameOverStats();
+      }
+      showOverlay('game-over-overlay');
     }
   }
 

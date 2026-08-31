@@ -30,7 +30,7 @@
     var cats = [];
     for (var r = 0; r < GRID_SIZE; r++) {
       for (var c = 0; c < GRID_SIZE; c++) {
-        if (grid[r][c] === 1) cats.push([r, c]);
+        if (grid[r][c] > 0) cats.push([r, c]);
       }
     }
     return cats;
@@ -46,10 +46,10 @@
 
     var rowCats = 0, colCats = 0;
     for (var r = 0; r < GRID_SIZE; r++) {
-      if (grid[r][col] === 1) colCats++;
+      if (grid[r][col] > 0) colCats++;
     }
     for (var c = 0; c < GRID_SIZE; c++) {
-      if (grid[row][c] === 1) rowCats++;
+      if (grid[row][c] > 0) rowCats++;
     }
     if (rowCats > 1) return { valid: false, reason: 'row' };
     if (colCats > 1) return { valid: false, reason: 'col' };
@@ -59,7 +59,7 @@
         if (dr === 0 && dc === 0) continue;
         var nr = row + dr, nc = col + dc;
         if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE) {
-          if (grid[nr][nc] === 1) return { valid: false, reason: 'touching' };
+          if (grid[nr][nc] > 0) return { valid: false, reason: 'touching' };
         }
       }
     }
@@ -68,7 +68,7 @@
     var regionCats = 0;
     for (var r = 0; r < GRID_SIZE; r++) {
       for (var c = 0; c < GRID_SIZE; c++) {
-        if (regionGrid[r][c] === regionId && grid[r][c] === 1) regionCats++;
+        if (regionGrid[r][c] === regionId && grid[r][c] > 0) regionCats++;
       }
     }
     if (regionCats > 1) return { valid: false, reason: 'region' };
