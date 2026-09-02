@@ -50,5 +50,6 @@ def post_detail(request, slug):
         "next_post_slug": next_post_slug,
         "prev_post_slug": prev_post_slug,
         "is_staff": request.user.is_staff if hasattr(request, "user") else False,
+        "show_private_content": viewer.view_private,
     }
     return render(request, "blog/post_detail.html", context)

@@ -20,6 +20,15 @@
             <div class="post-content">
                 {{ post.content|render_markdown|safe }}
             </div>
+
+            {% if show_private_content %}
+            <div class="mt-4 p-4 border rounded bg-light">
+                <h5 class="mb-3 text-muted">Private Content</h5>
+                <div class="post-content">
+                    {{ post.private_content|render_markdown|safe }}
+                </div>
+            </div>
+            {% endif %}
         </article>
 
         <hr class="my-4">

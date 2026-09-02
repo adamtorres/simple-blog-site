@@ -25,7 +25,7 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ["title", "author", "status", "created_at"]
     prepopulated_fields = {"slug": ("title",)}
     list_filter = ["created_at", "status"]
-    fields = ["title", "slug", "content", "status"]
+    fields = ["title", "slug", "content", "private_content", "status"]
     actions = ["approve_selected"]
 
     def get_changeform_initial_data(self, request):
@@ -50,5 +50,5 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Viewer)
 class ViewerAdmin(admin.ModelAdmin):
-    list_display = ["username", "created_at"]
-    list_filter = ["created_at"]
+    list_display = ["username", "created_at", "view_private"]
+    list_filter = ["created_at", "view_private"]

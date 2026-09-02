@@ -6,6 +6,11 @@ from django.utils import timezone
 class Viewer(models.Model):
     username = models.CharField(max_length=150, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    view_private = models.BooleanField(
+        default=False,
+        verbose_name="View Private Content",
+        help_text="Grant this viewer access to private content.",
+    )
 
     class Meta:
         ordering = ["-created_at"]
@@ -23,6 +28,12 @@ class Post(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     content = models.TextField()
+    private_content = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Private Content",
+        help_text="Content only visible to viewers with 'View Private Content' permission.",
+    )
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="blog_posts")
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField(auto_now=True)
