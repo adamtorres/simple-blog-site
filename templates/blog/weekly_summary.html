@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Weekly Summary - Simple Blog{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="mb-4">Weekly Summary</h1>
+
+        {% if weeks %}
+        <div class="list-group">
+            {% for wk in weeks %}
+            <a href="{% url 'blog:weekly_summary_week' wk.year wk.week_number %}"
+               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ wk.sunday|date:"F j, Y" }}</strong> &ndash; {{ wk.saturday|date:"F j, Y" }}
+                    <br><small class="text-muted">Week {{ wk.week_number }} of {{ wk.year }}</small>
+                </div>
+                <span class="badge bg-primary rounded-pill">{{ wk.posts|length }} post{{ wk.posts|pluralize }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        {% elif no_week %}
+        <div class="alert alert-info">
+            No posts found for the week of
+            <strong>{{ year }}-W{{ week_number }}</strong>.
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No approved posts yet.
+        </div>
+        {% endif %}
+
+        <a href="{% url 'blog:post_list' %}" class="btn btn-outline-secondary mt-3">
+            &larr; Back to all posts
+        </a>
+    </div>
+</div>
+{% endblock %}

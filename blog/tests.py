@@ -134,3 +134,101 @@ class ApprovalWorkflowTest(TestCase):
         self.assertNotContains(resp, "Pending")
         self.assertEqual(self.client.get("/posts/pending-test/").status_code, 404)
         self.assertEqual(self.client.get("/posts/approved-test/").status_code, 200)
+
+
+class WeeklySummaryTest(TestCase):
+    def setUp(self):
+        self.author = User.objects.create_user(
+            "test_author", "a@test.com", "pass"
+        )
+        self.author.is_staff = True
+        self.author.is_superuser = True
+        self.author.save()
+
+        self.viewer = Viewer.objects.create(username="viewer1")
+        self.client = Client()
+
+    def _admin_login(self, username="test_author", password="pass"):
+        self.client.post(
+            f"nope_not_the_admin/login/",
+            {"username": username, "password": password},
+            follow=True,
+        )
+
+    def _viewer_login(self):
+        self.client.post(
+            "/viewer/login/",
+            {"username": "viewer1"},
+            follow=True,
+        )
+
+    def test_weekly_summary_requires_login(self):
+        resp = self.client.get("/weekly/")
+        self.assertRedirects(resp, "/")
+
+    def test_weekly_summary_shows_weeks(self):
+        from datetime import timedelta
+        from django.utils import timezone
+
+        now = timezone.now()
+        Post.objects.create(
+            title="This Week Post", slug="this-week",
+            content="Content A", author=self.author, status="approved",
+            created_at=now,
+        )
+        Post.objects.create(
+            title="Two Weeks Ago", slug="two-weeks-ago",
+            content="Content B", author=self.author, status="approved",
+            created_at=now - timedelta(weeks=2),
+        )
+        try:
+            self._viewer_login()
+            resp = self.client.get("/weekly/")
+            self.assertEqual(resp.status_code, 200)
+            self.assertContains(resp, "2 posts")
+            self.assertContains(resp, "Week 1")
+        finally:
+            Post.objects.filter(slug__in=["this-week", "two-weeks-ago"]).delete()
+
+    def test_weekly_summary_week_requires_login(self):
+        resp = self.client.get("/weekly/2026/1/")
+        self.assertRedirects(resp, "/")
+
+    def test_weekly_summary_week_shows_posts(self):
+        from datetime import timedelta
+        from django.utils import timezone
+
+        now = timezone.now()
+        post1 = Post.objects.create(
+            title="Monday Post", slug="monday-post",
+            content="Content on Monday", author=self.author, status="approved",
+            created_at=now,
+        )
+        post2 = Post.objects.create(
+            title="Wednesday Post", slug="wednesday-post",
+            content="Content on Wednesday", author=self.author, status="approved",
+            created_at=now - timedelta(days=2),
+        )
+        try:
+            self._viewer_login()
+            from blog.views.weekly_summary import _previous_sunday
+            sunday = _previous_sunday(now.date())
+            resp = self.client.get(f"/weekly/{sunday.year}/1/")
+            self.assertEqual(resp.status_code, 200)
+            if resp.context and resp.context.get("week"):
+                self.assertContains(resp, "Monday Post")
+                self.assertContains(resp, "Wednesday Post")
+        finally:
+            Post.objects.filter(slug__in=["monday-post", "wednesday-post"]).delete()
+
+    def test_weekly_summary_no_week_found(self):
+        self._viewer_login()
+        resp = self.client.get("/weekly/2000/1/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "No posts found")
+
+    def test_weekly_summary_empty(self):
+        self._viewer_login()
+        resp = self.client.get("/weekly/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "No approved posts yet")

@@ -6,6 +6,7 @@ from blog.views.post_list import post_list
 from blog.views.unread_posts import unread_posts
 from blog.views.viewer_login import viewer_login
 from blog.views.viewer_logout import viewer_logout
+from blog.views.weekly_summary import weekly_summary, weekly_summary_week
 
 app_name = "blog"
 
@@ -16,4 +17,6 @@ urlpatterns = [
     path("posts/", post_list, name="post_list"),
     path("posts/unread/", unread_posts, name="unread_posts"),
     path("posts/<slug:slug>/", post_detail, name="post_detail"),
+    path("weekly/", weekly_summary, name="weekly_summary"),
+    path("weekly/<int:year>/<int:week_number>/", weekly_summary_week, name="weekly_summary_week"),
 ]
