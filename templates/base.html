@@ -28,7 +28,7 @@
                         <a class="nav-link" href="{% url 'blog:home' %}">Login</a>
                     {% endif %}
                     {% if is_staff %}
-                        <a class="nav-link" href="/admin/blog/post/add/">New Post</a>
+                        <a class="nav-link" href="{% url 'admin:blog_post_add' %}">New Post</a>
                         <a class="nav-link" href="{% url 'admin:blog_post_changelist' %}?status__exact=pending">Posts</a>
                     {% endif %}
                 </div>

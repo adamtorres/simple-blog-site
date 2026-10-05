@@ -31,7 +31,7 @@
 
         {% if is_staff %}
         <div class="text-center mb-4">
-            <a href="/admin/blog/post/add/" class="btn btn-success">Create a Post</a>
+            <a href="{% url 'admin:blog_post_add' %}" class="btn btn-success">Create a Post</a>
         </div>
         {% endif %}
 

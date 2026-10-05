@@ -3,6 +3,8 @@ from django.test import Client, TestCase
 
 from .models import Post, Viewer
 
+ADMIN_URL = "nope_not_the_admin"
+
 
 class ApprovalWorkflowTest(TestCase):
     def setUp(self):
@@ -31,7 +33,7 @@ class ApprovalWorkflowTest(TestCase):
 
     def _admin_login(self, username="test_author", password="pass"):
         self.client.post(
-            "/admin/login/",
+            f"{ADMIN_URL}/login/",
             {"username": username, "password": password},
             follow=True,
         )
@@ -50,7 +52,7 @@ class ApprovalWorkflowTest(TestCase):
         )
         self._admin_login("test_author")
         self.client.post(
-            f"/admin/blog/post/{post.pk}/change/",
+            f"{ADMIN_URL}/blog/post/{post.pk}/change/",
             {"title": "Self Approve Test", "slug": "self-approve-test",
              "content": "Content", "status": "approved"},
             follow=True,
@@ -65,7 +67,7 @@ class ApprovalWorkflowTest(TestCase):
         )
         self._admin_login("test_approver")
         self.client.post(
-            f"/admin/blog/post/{post.pk}/change/",
+            f"{ADMIN_URL}/blog/post/{post.pk}/change/",
             {"title": "Approved Post", "slug": "approved-post",
              "content": "Content", "status": "approved"},
             follow=True,
@@ -80,7 +82,7 @@ class ApprovalWorkflowTest(TestCase):
         )
         self._admin_login("test_author")
         self.client.post(
-            f"/admin/blog/post/{post.pk}/change/",
+            f"{ADMIN_URL}/blog/post/{post.pk}/change/",
             {"title": "Approved Post", "slug": "approved-post",
              "content": "Updated", "status": "approved"},
             follow=True,
@@ -95,7 +97,7 @@ class ApprovalWorkflowTest(TestCase):
         )
         self._admin_login("test_approver")
         self.client.post(
-            f"/admin/blog/post/{post.pk}/change/",
+            f"{ADMIN_URL}/blog/post/{post.pk}/change/",
             {"title": "Approved Post", "slug": "approved-post",
              "content": "Fixed typo", "status": "approved"},
             follow=True,
@@ -110,7 +112,7 @@ class ApprovalWorkflowTest(TestCase):
         )
         self._admin_login("test_author")
         self.client.post(
-            "/admin/blog/post/approve_selected/",
+            f"{ADMIN_URL}/blog/post/approve_selected/",
             {"action": "approve_selected", "_selected_action": [str(post.pk)]},
             follow=True,
         )
