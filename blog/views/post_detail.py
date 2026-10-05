@@ -37,10 +37,15 @@ def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug, status="approved")
 
     # Determine next/previous posts in chronological order
-    all_posts = list(Post.objects.values_list("slug", flat=True).order_by("created_at"))
-    current_idx = all_posts.index(slug)
-    next_post_slug = all_posts[current_idx + 1] if current_idx + 1 < len(all_posts) else None
-    prev_post_slug = all_posts[current_idx - 1] if current_idx - 1 >= 0 else None
+    # Only include approved posts so navigation never links to a pending post.
+    approved_slugs = list(
+        Post.objects.filter(status="approved")
+        .values_list("slug", flat=True)
+        .order_by("created_at")
+    )
+    current_idx = approved_slugs.index(slug)
+    next_post_slug = approved_slugs[current_idx + 1] if current_idx + 1 < len(approved_slugs) else None
+    prev_post_slug = approved_slugs[current_idx - 1] if current_idx - 1 >= 0 else None
 
     # Record the view (skip if already recorded)
     viewer.view_logs.get_or_create(post=post)

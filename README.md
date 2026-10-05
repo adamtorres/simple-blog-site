@@ -50,7 +50,7 @@ The second reason is a simpler way to keep disparate people updated on a topic. 
    python manage.py migrate
    ```
 
-5. **Create an admin user (optional, for Django admin access):**
+5. **Create an admin user (not optional, for Django admin access and creating posts):**
 
    ```bash
    python manage.py createsuperuser
@@ -118,3 +118,12 @@ The Django admin interface is at `/admin/`.
 ├── requirements.txt
 └── manage.py
 ```
+
+# TODO
+
+* I think pause might not have worked.
+* Tetris piece rotation needs work.
+* Sudoku unique puzzle needs clarification.
+* Blog post week grouping
+   * Group posts by calendar week even if read.
+
