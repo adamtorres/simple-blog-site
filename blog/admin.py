@@ -3,7 +3,7 @@ from datetime import datetime
 from django.contrib import admin
 from django.contrib.messages import constants as messages
 
-from .models import Post, Viewer
+from .models import Post, Viewer, ViewLog
 
 
 def _get_default_title():
@@ -52,3 +52,9 @@ class PostAdmin(admin.ModelAdmin):
 class ViewerAdmin(admin.ModelAdmin):
     list_display = ["username", "created_at", "view_private"]
     list_filter = ["created_at", "view_private"]
+
+
+@admin.register(ViewLog)
+class ViewerAdmin(admin.ModelAdmin):
+    list_display = ["viewer", "viewed_at", "post"]
+    list_filter = ["viewer", "viewed_at"]
