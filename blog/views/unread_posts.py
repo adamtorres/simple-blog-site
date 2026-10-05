@@ -51,5 +51,6 @@ def unread_posts(request):
         "posts": list(unread_posts_qs),
         "viewer": viewer,
         "is_staff": request.user.is_staff if hasattr(request, "user") else False,
+        "show_private_content": viewer.view_private,
     }
     return render(request, "blog/unread_posts.html", context)
